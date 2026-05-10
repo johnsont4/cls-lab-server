@@ -2,7 +2,7 @@
 
 This guide walks through deploying a Flask app on the lab server behind nginx using:
 
-- **Gunicorn** — a production-grade Python web server that runs your Flask app
+- **Gunicorn** — a Python web server that runs your Flask app
 - **systemd user service** — keeps Gunicorn running in the background and restarts it on crashes/reboots
 - **nginx** — reverse proxy that receives browser requests and forwards them to Gunicorn
 
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     app.run(host="0.0.0.0", port=<PORT>, debug=True)
 ```
 
-`host="0.0.0.0"` matters when running with `python app.py` directly. With Gunicorn, the bind address is set in the service file — but keep it here for local testing.
+`host="0.0.0.0"` matters when running with `python app.py` directly. With Gunicorn, the bind address is set in the service file, but keep it here for local testing.
 
 **Pick a port that isn't already in use.** Port 5000 is taken by macOS AirPlay on some systems. Check what's running:
 
@@ -50,7 +50,7 @@ which gunicorn
 
 ## Step 3: Create the systemd user service file
 
-Because home directories have restricted permissions (`drwx------`), system-level services (running as root) cannot access your files. Use a **user service** instead — it runs as you.
+Because home directories have restricted permissions (`drwx------`), system-level services (running as root) cannot access your files. Use a **user service** instead.
 
 Create the directory if it doesn't exist:
 
@@ -82,10 +82,8 @@ WantedBy=default.target
 ```
 
 Key notes:
-- **Do not include `User=<YOUR_USERNAME>`** — user services already run as you; adding it causes a `GROUP` error
 - **Use full absolute paths** — systemd does not expand `~`
-- `-w 2` gives Gunicorn 2 worker processes (fine for light usage)
-- `-b 127.0.0.1:<PORT>` binds to localhost only — nginx handles the public-facing side
+- `-b 127.0.0.1:<PORT>` binds to localhost only, nginx handles the public-facing side
 - `app:app` means "find the Flask object named `app` inside `app.py`"
 
 ---
@@ -116,14 +114,14 @@ Common errors:
 | Error | Cause |
 |---|---|
 | `Permission denied` on Gunicorn path | Used `sudo systemctl` instead of `systemctl --user`, or included `User=` in the service file |
-| `status=216/GROUP` | Included `User=<YOUR_USERNAME>` in a user service file — remove it |
+| `status=216/GROUP` | Included `User=<YOUR_USERNAME>` in a user service file, just remove it |
 | `No such file or directory` | Wrong path to Gunicorn or `WorkingDirectory` |
 
 ---
 
 ## Step 5: Add the nginx location block
 
-nginx is already running on the server. Add a location block for your app inside the existing `server { }` block in the nginx config file.
+nginx is already running on the server. Add a location block for your app inside the existing `server { }` block in the nginx config file. The nginx .config is located in the /etc/nginx/conf.d directory in the antoniak-lab.conf file.
 
 ```nginx
 location = /<YOUR_USERNAME>/<APP_NAME> {
@@ -141,7 +139,7 @@ location /<YOUR_USERNAME>/<APP_NAME>/ {
 ```
 
 Key notes:
-- The first block (`return 301`) redirects requests without a trailing slash — without it, the path without a trailing slash will 404
+- The first block (`return 301`) redirects requests without a trailing slash. Without it, the path without a trailing slash will 404
 - The trailing slash on `proxy_pass http://127.0.0.1:<PORT>/` strips the URL prefix before passing to Gunicorn, so Flask receives `/` instead of `/<YOUR_USERNAME>/<APP_NAME>/`
 - The `proxy_set_header` lines pass the original request metadata (real client IP, protocol, etc.) to your app
 
@@ -153,10 +151,10 @@ Key notes:
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-Always run `nginx -t` first — it's a dry run that catches config errors before you reload.
+Always run `nginx -t` first. It's a dry run that catches config errors before you reload.
 
 Your app will be live at:
 
 ```
-http://<SERVER_HOSTNAME>/<YOUR_USERNAME>/<APP_NAME>/
+http://antoniak-lab.colorado.edu/<YOUR_USERNAME>/<APP_NAME>/
 ```

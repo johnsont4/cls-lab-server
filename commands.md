@@ -121,7 +121,7 @@ conda env list
 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:<PORT>/
 
 # Test if a path is accessible through nginx
-curl -I http://<SERVER_HOSTNAME>/<APP_PREFIX>/
+curl -I http://antoniak-lab.colorado.edu/<APP_PREFIX>/
 
 # Check disk usage in your home directory
 du -sh ~/*

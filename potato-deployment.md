@@ -95,7 +95,7 @@ curl -I http://127.0.0.1:<PORT>/<APP_PREFIX>/
 
 ## Step 4: Create a user systemd service
 
-Use a **user** service, not a system-wide service. On this server, SELinux blocks system services from executing Conda Python out of a home directory — user services avoid this.
+Use a **user** service, not a system-wide service. On this server, SELinux blocks system services from executing Conda Python out of a home directory. User services avoid this.
 
 Create the directory if needed:
 
@@ -156,7 +156,7 @@ journalctl --user -u potato-<APP_PREFIX> -n 50 --no-pager
 
 ## Step 7: Add the nginx location block
 
-Add this inside the existing `server { }` block in the nginx config file:
+The nginx .config is located in the /etc/nginx/conf.d directory in the antoniak-lab.conf file. Add this inside the existing `server { }` block in the nginx config file:
 
 ```nginx
 location = /<APP_PREFIX> {
@@ -186,31 +186,6 @@ Test:
 ```bash
 curl -I http://<SERVER_HOSTNAME>/<APP_PREFIX>/
 ```
-
----
-
-## Step 8: (Optional) Direct port access instead of nginx prefix
-
-If you want to skip nginx and expose Potato directly on a port:
-
-```yaml
-server:
-  host: 0.0.0.0
-  port: <PORT>
-```
-
-Then open the port in firewalld:
-
-```bash
-sudo firewall-cmd --add-port=<PORT>/tcp --permanent
-sudo firewall-cmd --reload
-```
-
-Access at `http://<SERVER_HOSTNAME>:<PORT>/`.
-
-**Prefix vs direct port:**
-- Prefix looks cleaner and keeps everything on port 80
-- Direct port is easier if the frontend is not fully prefix-aware (broken CSS/JS asset paths)
 
 ---
 
