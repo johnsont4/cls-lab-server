@@ -7,9 +7,13 @@ This guide covers deploying a [Potato](https://github.com/davidjurgens/potato) a
 
 ---
 
+## Step 0: Pull the [Potato](https://github.com/davidjurgens/potato) repo
+
+---
+
 ## Step 1: Set up your task directory
 
-Put your task in a self-contained directory:
+Put your task in a self-contained directory. For instance, you can put it in the default /examples/ directory:
 
 ```
 /home/<YOUR_USERNAME>/potato/examples/<TASK_TYPE>/<TASK_DIR>/
@@ -18,19 +22,19 @@ Put your task in a self-contained directory:
     └── input.jsonl
 ```
 
-Keep your data inside the task directory or a subdirectory of it.
+Keep your data inside the task directory (can be a subdirectory of it).
 
 ---
 
 ## Step 2: Create `config.yaml`
 
-A minimal config for a task deployed behind nginx:
+Look at the potato docs to update your config file. There are lots of pre-built functionalities and task types. I've used json as the output format for annotated data, but there is a csv-supported output format as well. A minimal config for a task deployed behind nginx:
 
 ```yaml
 server:
   host: 127.0.0.1
   port: <PORT>
-  base_path: /<APP_PREFIX> (the name of the app, just keep it consistent throughout)
+  base_path: /<APP_PREFIX> (the name of the app, just keep it consistent throughout, an example is "emotion-annotation")
   workers: 2
   timeout: 120
 
