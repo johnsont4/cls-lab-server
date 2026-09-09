@@ -2,45 +2,25 @@
 
 ## About the server
 
-<!-- Why does this server exist? What problem does it solve for the lab? -->
-<!-- Example: "The antoniak-lab server provides a shared hosting environment for lab members to deploy annotation tools, demos, and research applications accessible from any browser." -->
-
 **Purpose:**
-> This server provides a shared hosting environment for members of Antoniak lab to deploy annotation tools, demos, and other applications that can be accessed from anywhere.
+> This server provides a shared hosting environment for members of the Culture, Language, & Systems Lab to deploy annotation tools, demos, and other applications that can be accessed from anywhere (not just by CU-affiliates).
 
 **Who maintains it:**
-> Advait and Teagan primarily, but anyone in the Antoniak lab can help.
+> Advait and Teagan primarily, but anyone in the Culture, Language, & Systems Lab can help. Also reach out to the CS computing resources team (cscihelp@colorado.edu), they've been helpful in setting up the server.
 
 **How to get access:**
-> _need more info, come back later_
+> The best way to gain access is to email the [CS computing resources team](https://www.colorado.edu/cs/students/computing-resources-students) (cscihelp@colorado.edu). Jinyoung Park was the IT employee that originally set up the lab server, but there are others in OIT that can grant you access. Originally the server name was antoniak-lab, but we're in the process of changing the name to cls-lb.
 
 ---
 
 ## What can you put on the server?
 
-The server is well-suited for:
-
-- **Annotation tools** (e.g., Potato tasks for data labeling)
+- **Annotation tools** (e.g., [Potato](https://github.com/davidjurgens/potato) tasks for data labeling)
 - **Flask/web apps** (demos, research tools, lightweight APIs)
-- **Static or semi-static sites** served through nginx
 
 Considerations:
-- Each app should run on its own port (`9001`, `9002`, `5001`, etc.) — check for conflicts before deploying. See helpful commands in the commands.md file.
-- Apps run as user systemd services under your own account
+- Each app should run on its own port (`9001`, `9002`, `5001`, etc.). Check for conflicts before deploying. See helpful commands in the commands.md file.
 - Heavy compute (model inference, large data processing) should go on dedicated compute resources, not this server
-
----
-
-## Server specs
-
-| | |
-|---|---|
-| **Hostname** | `antoniak-lab.colorado.edu` |
-| **OS** | `<OS and version, e.g., Rocky Linux 8>` |
-| **CPU** | `<e.g., 16-core Intel Xeon>` |
-| **RAM** | `<e.g., 64 GB>` |
-| **Storage** | `<e.g., 2 TB /home, shared NFS>` |
-| **IP address** | `<SERVER_IP>` |
 
 ---
 
@@ -69,10 +49,3 @@ http://antoniak-lab.colorado.edu/<YOUR_USERNAME>/<APP_NAME>/
 - **firewalld** — manages port access
 - **SELinux** — enforcing (this is why user services are used instead of system services)
 - **Conda** — each user manages their own environments under `~/miniconda3/`
-
----
-
-## Notes and constraints
-
-
-> Anything?

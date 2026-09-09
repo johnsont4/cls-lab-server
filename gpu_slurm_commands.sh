@@ -1,6 +1,5 @@
 ##Set up interactive node (compute node):
-sinteractive --account=blanca-clearlab1 --partition=blanca-clearlab1 --qos=blanca-clearlab1 --time=0:30:00 --gres=gpu:1 --nodes=1
-
+sinteractive --account=blanca-clearlab1 --partition=blanca-clearlab1 --qos=blanca-clearlab1 --time=4:00:00 --gres=gpu:1 --nodes=1
 # Then you should see something like this: [user@bgpu-g4-u30 Projects]$
 
 # Check the GPU dashboard
